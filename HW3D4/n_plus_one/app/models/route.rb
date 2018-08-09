@@ -33,20 +33,17 @@ class Route < ApplicationRecord
     # TODO: your code here
     buses = self.buses.includes(:drivers)
 
-    bus_id_drivers = []
+    all_drivers = {}
 
-    Route.all.each do |route_num|
-      #association
-      bus_drivers = buses.select('drivers.name').joins(:drivers).where("buses.route_id = #{route_num.number}")
+    buses.each do |bus|
       drivers_names = []
 
-      bus_drivers.each do |driver|
+      bus.drivers.each do |driver|
         drivers_names << driver.name
       end
-
-      bus_id_drivers << {"#{route_num.number}" => "#{drivers_names}" }
-
+      all_drivers[bus.id] = drivers_names
     end
-    bus_id_drivers
+
+    all_drivers
   end
 end
